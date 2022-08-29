@@ -19,21 +19,23 @@ def read(file):
     g.parse(file)
     logging.critical(" reading graph--- %s seconds ---" % (time.time() - start_time)) 
     return g
-def read_gaps(graph_read):
+def read_comparison_values(graph_read):
     start_time = time.time()
     qres = graph_read.query(
         """
     PREFIX obo: <http://purl.obolibrary.org/obo/>
     PREFIX slowmo: <http://example.com/slowmo#>
     construct {
-    ?candidate a obo:psdo_0000104 
-     
-    
+        ?candidate slowmo:IsAboutMeasure ?measure .
+        ?measure slowmo:WithComparator ?o3 .
+        ?o3 slowmo:ComparisonValue ?o4 .
+        
     } 
     WHERE {
-    ?candidate a obo:psdo_0000104  
-    
-   
+        ?candidate slowmo:IsAboutMeasure ?measure .
+        ?measure slowmo:WithComparator ?o3 .
+        ?o3 slowmo:ComparisonValue ?o4 .
+        
     }
     """
     )
