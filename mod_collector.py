@@ -18,6 +18,7 @@ from load import read ,read_goal_comparator,read_comparison_values,read_social_c
 #, read_perf_data ,read_gaps
 #,write
 from calc_gaps_slopes import neg_gap_calc 
+from insert import insert_neg_gap
 
 # load()
 
@@ -44,5 +45,8 @@ pos_gap_df = to_dataframe(pos_gap)
 neg_gap =neg_gap(graph_read)
 neg_gap_df = to_dataframe(neg_gap)
 neg_gap_sizes = neg_gap_calc(neg_gap_df,performance_data_df,comparison_values_df)
-
+final_graph = insert_neg_gap(neg_gap_sizes,graph_read)
+print(final_graph.serialize(format='json-ld', indent=4))
+#with open(f'spek_mc.json', 'w') as output_file:
+#    json.dump(final_graph, output_file)
 

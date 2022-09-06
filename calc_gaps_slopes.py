@@ -15,7 +15,7 @@ def neg_gap_calc(neg_gap_df , performance_data_df, comparison_values):
     comparison_values_df = get_comparison_values(neg_gap_df,comparison_values)
     goal_gap_size_df = calc_goal_comparator_gap(comparison_values_df,performance_data_df)
           
-    return comparison_values_df
+    return goal_gap_size_df
 def get_comparison_values(neg_gap_df,comparison_values):
     neg_gap_df.reset_index(inplace=True)
     neg_gap_measures = neg_gap_df[['http://example.com/slowmo#RegardingMeasure{BNode}']]
@@ -71,7 +71,9 @@ def calc_goal_comparator_gap(comparison_values_df, performance_data):
     final_df1['social_comparator_size'] = final_df1['SocialComparator']- final_df1['performance_data']
     #final_df1['goal_comparator_size'] = final_df1['performance_data'].fillna(0)
     #print(lenb)
+    #final_df1.to_csv("final_df.csv")
+    final_df1 = final_df1[['Measure_Name','GoalComparator','SocialComparator','Passed_Count','Flagged_Count','Denominator','performance_data','goal_comparator_size','social_comparator_size']]
     final_df1.to_csv("final_df.csv")
     #print(latest_measure_df.head())
-    return comparison_values_df
+    return final_df1
 
