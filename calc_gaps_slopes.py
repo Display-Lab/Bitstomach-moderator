@@ -11,14 +11,15 @@ from rdfpandas.graph import to_dataframe
 from SPARQLWrapper import XML, SPARQLWrapper
 
 warnings.filterwarnings("ignore")
-def neg_gap_calc(neg_gap_df , performance_data_df, comparison_values):
-    comparison_values_df = get_comparison_values(neg_gap_df,comparison_values)
+def gap_calc( performance_data_df, comparison_values):
+    comparison_values_df = get_comparison_values(comparison_values)
     goal_gap_size_df = calc_goal_comparator_gap(comparison_values_df,performance_data_df)
-          
+    #neg_goal_gap_size_df.to_csv("final_neg_gap.csv")      
     return goal_gap_size_df
-def get_comparison_values(neg_gap_df,comparison_values):
-    neg_gap_df.reset_index(inplace=True)
-    neg_gap_measures = neg_gap_df[['http://example.com/slowmo#RegardingMeasure{BNode}']]
+
+def get_comparison_values(comparison_values):
+    #neg_gap_df.reset_index(inplace=True)
+    #neg_gap_measures = neg_gap_df[['http://example.com/slowmo#RegardingMeasure{BNode}']]
     comparison_values_df = comparison_values[['index','http://example.com/slowmo#WithComparator{BNode}[0]','http://example.com/slowmo#WithComparator{BNode}[1]','http://example.com/slowmo#ComparisonValue{Literal}(xsd:double)']]
     
     GoalComparator = []
@@ -53,6 +54,7 @@ def get_comparison_values(neg_gap_df,comparison_values):
     comparison_values_df['SocialComparator']=SocialComparator 
     comparison_values_df.to_csv("comparison_values.csv")
     return comparison_values_df
+
 def calc_goal_comparator_gap(comparison_values_df, performance_data):
     performance_data['Month'] = pd.to_datetime(performance_data['Month'])
     idx= performance_data.groupby(['Measure_Name'])['Month'].transform(max) == performance_data['Month']
@@ -72,8 +74,10 @@ def calc_goal_comparator_gap(comparison_values_df, performance_data):
     #final_df1['goal_comparator_size'] = final_df1['performance_data'].fillna(0)
     #print(lenb)
     #final_df1.to_csv("final_df.csv")
-    final_df1 = final_df1[['Measure_Name','GoalComparator','SocialComparator','Passed_Count','Flagged_Count','Denominator','performance_data','goal_comparator_size','social_comparator_size']]
-    final_df1.to_csv("final_df.csv")
+    final_df1 = final_df1[['Measure_Name','http://example.com/slowmo#WithComparator{BNode}[0]','http://example.com/slowmo#WithComparator{BNode}[1]','GoalComparator','SocialComparator','Passed_Count','Flagged_Count','Denominator','performance_data','goal_comparator_size','social_comparator_size']]
+    #final_df1.to_csv("final_df.csv")
+    final_df1 = final_df1.rename({'http://example.com/slowmo#WithComparator{BNode}[0]': 'goal_comparator_node', 'http://example.com/slowmo#WithComparator{BNode}[1]': 'social_comparator_node'}, axis=1)
+    #final_df1.to_csv("final_df.csv")
     #print(latest_measure_df.head())
     return final_df1
 
