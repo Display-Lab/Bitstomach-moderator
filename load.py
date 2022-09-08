@@ -169,7 +169,7 @@ def pos_perf_trend(graph_read):
     )
     logging.critical(" querying contenders graph--- %s seconds ---" % (time.time() - start_time)) 
     return qres.graph
-def pos_gap(graph_read):
+
     start_time = time.time()
     qres = graph_read.query(
     """
@@ -195,7 +195,7 @@ def pos_gap(graph_read):
     logging.critical(" querying contenders graph--- %s seconds ---" % (time.time() - start_time)) 
     return qres.graph
 
-def neg_gap(graph_read):
+
     start_time = time.time()
     qres = graph_read.query(
     """
