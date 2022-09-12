@@ -57,10 +57,11 @@ def trend_calc(performance_data_df,comparison_values):
     #print(lenb)
     slope_final_df = slope_final_df[:(lenb-1)]
     slope_final_df= slope_final_df[['Measure_Name','performance_data','performance_trend_slope']]
+    slope_final_df['performance_trend_slope'] = slope_final_df['performance_trend_slope'].abs()
     #lenb= len(slope_final_df[['performance_data']])
     #print(lenb)
     #print(slope_final_df.shape)
-    slope_final_df.to_csv("Slope.csv")
+    #slope_final_df.to_csv("Slope.csv")
     #slope_final_df = slope_final_df.rename({'0': 'performance_trend_slope'}, axis=1)
     #print(slope_final_df)
     return slope_final_df
@@ -126,14 +127,16 @@ def calc_goal_comparator_gap(comparison_values_df, performance_data):
     final_df1['SocialComparator'] = pd.to_numeric(final_df1['SocialComparator'],errors='coerce')
     final_df1['performance_data'] = pd.to_numeric(final_df1['performance_data'],errors='coerce')
     final_df1['goal_comparator_size'] = final_df1['GoalComparator']- final_df1['performance_data']
+    final_df1['goal_comparator_size'] = final_df1['goal_comparator_size'].abs()
     final_df1['social_comparator_size'] = final_df1['SocialComparator']- final_df1['performance_data']
+    final_df1['social_comparator_size'] = final_df1['social_comparator_size'].abs()
     #final_df1['goal_comparator_size'] = final_df1['performance_data'].fillna(0)
     #print(lenb)
     #final_df1.to_csv("final_df.csv")
     final_df1 = final_df1[['Measure_Name','goal_comparator_node','social_comparator_node','GoalComparator','SocialComparator','Passed_Count','Flagged_Count','Denominator','performance_data','goal_comparator_size','social_comparator_size']]
     #final_df1.to_csv("final_df.csv")
    # final_df1 = final_df1.rename({'http://example.com/slowmo#WithComparator{BNode}[0]': 'goal_comparator_node', 'http://example.com/slowmo#WithComparator{BNode}[1]': 'social_comparator_node'}, axis=1)
-    final_df1.to_csv("final_df.csv")
+    #final_df1.to_csv("final_df.csv")
     #print(latest_measure_df.head())
     return final_df1
 
