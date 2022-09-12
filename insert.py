@@ -43,20 +43,18 @@ def insert_gap(gap_df,graph_read):
     return graph_read
 
 def insert_slope(gap_df,graph_read):
-    gap_df = gap_df.drop_duplicates()
+    
+    #gap_df = gap_df.drop_duplicates()
     #goal_comparator_df = gap_df[['goal_comparator_node','goal_comparator_size']]
     #social_comparator_df = gap_df[['social_comparator_node','social_comparator_size']]
     for index ,row in gap_df.iterrows():
-        node = row['goal_comparator_node']
+        node = row['Measure_Name']
+        #print(node)
         b_node = BNode(node)
         p = (URIRef("http://example.com/slowmo#PerformanceTrendSlope"))
-        o = Literal(row['0'])
+        o = Literal(row['performance_trend_slope'])
+       
         graph_read.add((b_node, p, o,))
-        node1 = row['social_comparator_node']
-        b_node1 = BNode(node1)
-        p = (URIRef("http://example.com/slowmo#PerformanceGapSize"))
-        o = Literal(row['0'])
-        graph_read.add((b_node1, p, o,))
         
     #print(neg_gap_df.head())
 

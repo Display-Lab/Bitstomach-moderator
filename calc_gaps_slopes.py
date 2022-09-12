@@ -24,6 +24,8 @@ def trend_calc(performance_data_df,comparison_values):
     #print(performance_data_df.head())
     #neg_goal_gap_size_df.to_csv("final_neg_gap.csv")      
     performance_data_df['Month'] = pd.to_datetime(performance_data_df['Month'])
+    lenb= len( performance_data_df[['Measure_Name']].drop_duplicates())
+    #print(lenb)
     idx= performance_data_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     #performance_data_df =performance_data_df.reset_index()
@@ -47,10 +49,20 @@ def trend_calc(performance_data_df,comparison_values):
     comparison_values_df = get_comparison_values(comparison_values)
     comparison_values_df.rename(columns = {'index':'Measure_Name'}, inplace = True)
     slope_final_df =pd.merge( comparison_values_df,slope_df , on='Measure_Name', how='outer')
-    slope_final_df=slope_final_df.drop_duplicates()
+    slope_final_df = slope_final_df.reset_index(drop = True)
+    #print(slope_final_df.head())
+    slope_final_df=slope_final_df.drop_duplicates(subset=['Measure_Name'])
+    slope_final_df = slope_final_df.rename({0: 'performance_trend_slope'}, axis=1)
+    #lenb= len(slope_final_df[['Passed_Count']])
+    #print(lenb)
+    slope_final_df = slope_final_df[:(lenb-1)]
+    slope_final_df= slope_final_df[['Measure_Name','performance_data','performance_trend_slope']]
+    #lenb= len(slope_final_df[['performance_data']])
+    #print(lenb)
+    #print(slope_final_df.shape)
     slope_final_df.to_csv("Slope.csv")
-    #slope_df = slope_df.rename({'0': 'performance_trend_slope'}, axis=1)
-    print(slope_final_df)
+    #slope_final_df = slope_final_df.rename({'0': 'performance_trend_slope'}, axis=1)
+    #print(slope_final_df)
     return slope_final_df
 
 def theil_reg(df, xcol, ycol):
