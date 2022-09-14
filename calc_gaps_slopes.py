@@ -51,6 +51,9 @@ def theil_reg(df, xcol, ycol):
 
 def monotonic_pred(performance_data_df,comparison_values_df):
     performance_data_df['Month'] = pd.to_datetime(performance_data_df['Month'])
+    comparison_values_df = get_comparison_values(comparison_values_df)
+    comparison_values_df.rename(columns = {'index':'Measure_Name'}, inplace = True)
+    
     lenb= len( performance_data_df[['Measure_Name']].drop_duplicates())
     idx= performance_data_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
@@ -84,6 +87,9 @@ def monotonic_pred(performance_data_df,comparison_values_df):
     trend_df['performance_data_month2']  = performance_data_month2
     trend_df['performance_data_month3']  = performance_data_month3
     trend_df = trend_df[['Measure_Name','performance_data_month1','performance_data_month2','performance_data_month3']]
+    lenb= len(trend_df[['Measure_Name']])
+    comparison_values_df = comparison_values_df[0:(lenb-1)]
+    trend_df =pd.merge( comparison_values_df,trend_df , on='Measure_Name', how='outer')
     for rowIndex, row in trend_df.iterrows():
         m1= row['performance_data_month2']-row['performance_data_month1']
         m2= row['performance_data_month3']-row['performance_data_month2']
@@ -100,7 +106,7 @@ def monotonic_pred(performance_data_df,comparison_values_df):
     trend_df.to_csv("trend.csv")
 
 
-    return performance_data_df
+    return trend_df
 
 
 def get_comparison_values(comparison_values):
