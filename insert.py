@@ -29,6 +29,7 @@ def insert_gap(gap_df,graph_read):
         p = (URIRef("http://example.com/slowmo#PerformanceGapSize"))
         o = Literal(row['social_comparator_size'])
         graph_read.add((b_node1, p, o,))
+    
         
     #print(neg_gap_df.head())
 
@@ -102,7 +103,33 @@ def insert_trend(slope_graph,monotonic_pred_df):
         node1 =  row["Measure_Name"]
         o3=BNode(node1)
         slope_graph.add((s2,p3,o3))
-
+    for rowIndex, row in monotonic_pred_df.iterrows():  # iterate over rows
+        node = "p1"
+        b_node = BNode(node)
+        p= Literal("http://purl.obolibrary.org/obo/RO_0000091")
+        o = BNode()
+        slope_graph.add((b_node,p,o))
+        s=o
+        p1 = RDF.type
+        if row['trend']== "no trend":
+            trend ="http://example.com/slowmo#NoTrend"
+        elif row['trend']== "monotonic":
+            trend ="http://example.com/slowmo#MonotonicTrend"
+        elif row['trend']== "non-monotonic":
+            trend ="http://example.com/slowmo#NonMonotonicTrend"
+        node1 = Literal(trend)
+        o1 = BNode(node1)
+        slope_graph.add((s,p1,o1))
+        s1 = o
+        p2=Literal("http://example.com/slowmo#RegardingComparator")
+        node1 = row["social_comparator_node"] 
+        o2=BNode(node1)
+        slope_graph.add((s1,p2,o2))
+        s2 = o
+        p3=Literal("http://example.com/slowmo#RegardingMeasure")
+        node1 =  row["Measure_Name"]
+        o3=BNode(node1)
+        slope_graph.add((s2,p3,o3))
     # slope_graph_df =  to_dataframe(slope_graph)
     # slope_graph_df.reset_index(inplace=True)
     # a = slope_graph_df.loc[slope_graph_df["index"] == "p1"]
