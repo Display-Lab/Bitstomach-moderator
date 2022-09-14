@@ -1,3 +1,4 @@
+from tracemalloc import start
 import warnings
 import time
 import logging
@@ -10,6 +11,7 @@ from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
 from SPARQLWrapper import XML, SPARQLWrapper
+import numpy as np 
 
 warnings.filterwarnings("ignore")
 
@@ -69,5 +71,96 @@ def insert_slope(gap_df,graph_read):
 
     
     return graph_read
+
+def insert_trend(slope_graph, monotonic_pred_df):
+    slope_graph_df =  to_dataframe(slope_graph)
+    slope_graph_df.reset_index(inplace=True)
+    a = slope_graph_df.loc[slope_graph_df["index"] == "p1"]
+    a.reset_index(inplace = True)
+    a= a.T
+    a.rename(columns = {0:'index'}, inplace = True)
+    a=a.astype(str)
+    #a['index']=a['index'].astype('|S')
+    #a.to_csv("a.csv")
+    b=a.values.tolist()
+    #b.remove(np.nan)
+    #print(b)
+    subject_node=[]
+    #start_letter = "N"
+    #with_s = list(filter(lambda x: x.startswith(start_letter),b))
+    #print(with_s)
+    for x in range(len(b)):
+        #x = *b[x].startswith("N")
+        if(b[x][0].startswith("N")):
+            subject_node.append(b[x][0])
+        #print(b[x][0].startswith("N"))
+        #print(type(*b[x]))
+        #print(y)    
+        #print(str(b[x]))
+        #print(type(b[x]))
+        #print (b[x])
+        #if(b[x]=="nan"):
+           # ab.append(b[x])
+    for x in range(len(subject_node)):
+        #print(subject_node[x])
+        node = subject_node[x]
+        b_node = BNode(node)
+        p = RDF.type
+        o = Literal("http://example.com/slowmo#MonotonicTrend")
+        #slope_graph.add((b_node,p,o))
+        # s = o
+        # p=Literal("http://example.com/slowmo#RegardingComparator")
+        # node1 = "m1069"
+        # o1=BNode(node1)
+        # slope_graph.add((s,p,o1))
+    #a.to_csv("a.csv")
+
+
+
+    # node = "N00e33dbd0047463d8da330a1ee72d275"
+    # b_node = BNode(node)
+    # p = RDF.type
+    # o = Literal("http://example.com/slowmo#MonotonicTrend")
+    # slope_graph.add((b_node,p,o))
+    # s = o
+    # p=Literal("http://example.com/slowmo#RegardingComparator")
+    # node1 = "m1069"
+    # o1=BNode(node1)
+    # slope_graph.add((s,p,o1))
+    
+    # node= "p1"
+    # b_node = BNode(node)
+    # p=Literal("http://purl.obolibrary.org/obo/RO_0000091")
+    # node1 = "m1069"
+    # o= BNode(node1)
+    # o1= Literal("http://example.com/slowmo#MonotonicTrend")
+    # slope_graph.add((b_node,p,o))
+    # slope_graph.add((o,RDF.type,o1))
+
+
+    node = "p1"
+    b_node = BNode(node)
+    p= Literal("http://purl.obolibrary.org/obo/RO_0000091")
+    i="ab_unique"
+    o = BNode(i)
+    slope_graph.add((b_node,p,o))
+    s=o
+    p1 = RDF.type
+    node1 = Literal("http://example.com/slowmo#MonotonicTrend")
+    o1 = BNode(node1)
+    slope_graph.add((s,p1,o1))
+    s1 = o
+    p2=Literal("http://example.com/slowmo#RegardingComparator")
+    node1 = "m1069" 
+    o2=BNode(node1)
+    slope_graph.add((s1,p2,o2))
+    s2 = o
+    p3=Literal("http://example.com/slowmo#RegardingMeasure")
+    node1 =  "GA01"
+    o3=BNode(node1)
+    slope_graph.add((s2,p3,o3))
+
+    return slope_graph
+
 
  
