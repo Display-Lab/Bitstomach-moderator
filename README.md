@@ -12,6 +12,11 @@ pip install mod[/path/or/url/to/mod-collector-0.1.0-py3-none-any.whl]
 ```sh
 pip install -e [path/to/module/displaylab/mod-collector/python]
 ```
+example
+
+```sh
+pip install -e /Users/uniquename/display-lab/mod-collector/mod-collector
+```
 
 ## Running the Mod-Collector script 
 ```sh
